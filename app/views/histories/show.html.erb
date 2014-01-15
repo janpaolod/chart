@@ -1,0 +1,71 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Complaint:</strong>
+  <%= @history.complaint %>
+</p>
+
+	<% @history.presents.each do |p| %>
+		<p>
+		<%= p.number %>
+		<% if p.number >= 2 %>
+		
+			<%= p.date.pluralize %>
+			
+		<% else %>
+		
+			<%= p.date %>
+			
+		<% end %>
+		prior to consult, the patient complained of 
+		
+		<% p.subjectives.each do |s| %>
+		
+			<%= s.symptom %> characterized as <%= s.characteristic %>,
+			
+		<% end %>
+		
+			No other associated symptoms reported.
+			The patient self-medicated 
+		<% p.treatments.each do |t| %>
+			  <%= t.medication.capitalize %>
+			<% if t.effectivity == true %>
+			   which offered relief
+			<% elsif t.effectivity == false %>
+			   which offered no relief
+			<% end %>
+		<% end %>
+		. The patient consulted 
+		<% p.consults.each do |c| %>
+			<% if c.doctor.empty? %>
+				a physician
+			<% else %>
+			<%= c.doctor.capitalize %>
+			<% end %>
+			<% if c.diagnosis.empty? %>
+				with unrecalled diagnosis
+			<% else %>
+			 with a diagnosis of <%= c.diagnosis.capitalize %>.
+			<% end %>
+			<% c.labs.each do |l| %>
+				<%= l.test.capitalize %> was requested and revealed <%= l.detail %>.
+			<% end %>
+				The patient was prescribed to take 
+			<% c.therapeutics.each do |tx| %>
+				<%= tx.medication.capitalize %>
+				<% if tx.effectivity == true && tx.compliance == true %>
+					which offered no relief and not compliant.
+				<% elsif tx.effectivity == true && tx.compliance == false %>
+					which offered no relief but took it compliantly.
+				<% elsif tx.effectivity == false && tx.compliance == false %>
+					which offered relief and took it compliantly.
+				<% elsif tx.effectivity ==false && tx.compliance == true %>
+					which offered relief but not compliantly.
+				<% end %>
+			<% end %>
+		<% end %>
+		</p>
+	<% end %>
+
+<%= link_to 'Edit', edit_history_path(@history) %> |
+<%= link_to 'Back', histories_path %>

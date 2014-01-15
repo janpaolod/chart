@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  consult_id: 1
+  medication: MyString
+  effectivity: false
+  compliance: false
+
+two:
+  consult_id: 1
+  medication: MyString
+  effectivity: false
+  compliance: false

@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  history_id: 1
+  number: 1
+  date: MyString
+
+two:
+  history_id: 1
+  number: 1
+  date: MyString

@@ -1,0 +1,101 @@
+<%= nested_form_for @history do |f| %>
+  <% if @history.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@history.errors.count, "error") %> prohibited this history from being saved:</h2>
+
+      <ul>
+      <% @history.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :complaint %><br>
+    <%= f.text_field :complaint %>
+  </div>
+	<%= f.fields_for :presents do |p| %>
+  <p>
+    <%= p.collection_select :number, Number::NUMBERS, :to_s, :to_s, 
+	       :include_blank => 'Number'
+	  %>
+    <%= p.collection_select :date, Period::PERIODS, :to_s, :to_s, 
+	       :include_blank => 'Date'
+	  %>
+  	<%= p.link_to_remove "Remove history" %>
+  </p>
+		<%= p.fields_for :subjectives do |s| %>
+	  	<p>
+			<%= s.text_field :symptom, :placeholder => 'symptom' %>  
+			<%= s.text_field :characteristic, :placeholder => 'characteristic (optional)' %>
+			<%= s.link_to_remove "Remove symptom" %>
+		</p>
+		<% end %>
+		<p><%= p.link_to_add "Add symptom", :subjectives %></p>
+		<div id="self_medicated">
+		 Self-medicated?
+		  <input type="radio" name="self_medicated" value="no"/>No<br/>      
+		  <input type="radio" name="self_medicated" value="yes" />Yes<br/>
+		  <div id="self_medicated_one">
+		<%= p.fields_for :treatments do |t| %>
+		 <p>
+			<%= t.text_field :medication, :placeholder => 'medication' %>  
+			Effective?
+			<%= t.radio_button(:effectivity, "false") %>
+			<%= t.label :effectivity, "Yes" %>
+			<%= t.radio_button(:effectivity, "true") %>
+			<%= t.label :effectivity, "No" %>
+			<%= t.link_to_remove "Remove treatment" %>
+		 </p>
+			<% end %>
+			<p><%= p.link_to_add "Add treatment", :treatments %></p>
+		 </div>
+		</div>
+		<div id="send_to">
+		 Consulted?
+		  <input type="radio" name="consult" value="no"/>No<br/>      
+		  <input type="radio" name="consult" value="yes" />Yes<br/>
+		  <div id="send_to_one">
+		 <%= p.fields_for :consults do |c| %>
+		  <p class='fields'>
+			<%= c.text_field :doctor, :placeholder => 'doctor (optional)' %> </br> 
+			<%= c.text_field :diagnosis, :placeholder => 'diagnosis (optional)' %>
+			<div id="labs_to">
+				Laboratory requested?
+				<input type="radio" name="labs" value="no"/>No<br/>      
+				<input type="radio" name="labs" value="yes" />Yes<br/>
+				<div id="labs_to_one">
+				<%= c.fields_for :labs do |l| %>
+					<%= l.text_field :test, :placeholder => 'test'  %>
+					<%= l.text_field :detail, :placeholder => 'detail'  %>
+					<%= l.link_to_remove "Remove labs" %>
+				<% end %>
+					<p><%= c.link_to_add "Add labs", :labs %></p>
+				</div>
+			</div>
+			<%= c.fields_for :therapeutics do |tx| %>
+				<%= tx.text_field :medication, :placeholder => 'medication'  %></br>
+				Effective?
+				<%= tx.radio_button(:effectivity, "false") %>
+				<%= tx.label :effectivity, "Yes" %>
+				<%= tx.radio_button(:effectivity, "true") %>
+				<%= tx.label :effectivity, "No" %></br>
+				Compliant?
+				<%= tx.radio_button(:compliance, "false") %>
+				<%= tx.label :compliance, "Yes" %>
+				<%= tx.radio_button(:compliance, "true") %>
+				<%= tx.label :compliance, "No" %>
+				<%= tx.link_to_remove "Remove treatment" %>
+			<% end %>	
+			<p><%= c.link_to_add "Add treatment", :therapeutics %></p>
+		  </p>
+		 <% end %>
+		 </div>
+		</div>
+	<% end %>
+	<p><%= f.link_to_add "Add a history", :presents, data: { target: "#p" } %></p>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
